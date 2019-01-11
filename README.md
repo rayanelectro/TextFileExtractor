@@ -5,4 +5,7 @@ Select a Header Text and a Footer Text, and the main input file.
 Program will search the input file for the header, if found, makes a new file in the same location as the input file. 
 It continues, untill it reaches the Footer text.
 
+# Binary Releases
+Download "TextFileExtractor v1.0" Windows Binary here.
+
 # Compiled with QT 5.2

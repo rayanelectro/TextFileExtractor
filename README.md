@@ -6,6 +6,6 @@ Program will search the input file for the header, if found, makes a new file in
 It continues, untill it reaches the Footer text.
 
 # Binary Releases
-Download "TextFileExtractor v1.0" Windows Binary here.
+[Download "TextFileExtractor v1.0" Windows Binary here.](https://www.google.com)
 
 # Compiled with QT 5.2

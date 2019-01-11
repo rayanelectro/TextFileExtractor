@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->progressBar->setVisible(false);
-    this->setFixedSize(this->geometry().width(),this->geometry().height());
+    this->setFixedSize(this->geometry().width(),this->geometry().height()); //Make un-resizable
 
 
 }
@@ -41,7 +41,7 @@ void MainWindow::on_btnSplit_clicked()
 
     CancelLoop=false;
 
-    if (inputFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    if (inputFile.open(QIODevice::ReadOnly | QIODevice::Text)) //If file selected is opened correctly.
     {
        QTextStream in(&inputFile);
        QString EOL;
@@ -50,15 +50,15 @@ void MainWindow::on_btnSplit_clicked()
        ui->btnStop->setEnabled(true);
 
 
-       if(ui->chkUnixEOL->isChecked())
+       if(ui->chkUnixEOL->isChecked()) //Based on the checkbox select LF or CR-LF for the end of line charcter.
            EOL="\n";
        else
            EOL="\r\n";
 
        ui->progressBar->setVisible(true);
-       while (!in.atEnd() && CancelLoop==false)
+       while (!in.atEnd() && CancelLoop==false) //Loop untill we reach the end of file, or the user cancels the operation.
        {
-          QString line = in.readLine();
+          QString line = in.readLine(); //Read one line at a time
 
           if(line.startsWith(ui->txtHeader->text()))
           {
@@ -68,17 +68,17 @@ void MainWindow::on_btnSplit_clicked()
 
               SplitFileNumber++;
 
-              if(outputFile.isOpen())outputFile.close();
+              if(outputFile.isOpen())outputFile.close(); //If by any chance the file hase laready been open, close it.
 
-              QString SplitFileName =ui->txtFileName->text()+ QString("_split%1.txt").arg(SplitFileNumber,5, 10, QChar('0'));
+              QString SplitFileName =ui->txtFileName->text()+ QString("_split%1.txt").arg(SplitFileNumber,5, 10, QChar('0')); //Make a new numbered file.
               outputFile.setFileName(SplitFileName);
-              outputFile.open(QIODevice::WriteOnly| QIODevice::Text);
+              outputFile.open(QIODevice::WriteOnly| QIODevice::Text); //Open the file for writing.
 
           }
 
           if(HeaderFound==true)
           {
-              if(ui->chkIncludeHeaderFooter->isChecked()==false)
+              if(ui->chkIncludeHeaderFooter->isChecked()==false) //Add header and footer only if checkbox is selected by the user
               {
                   if(!line.startsWith(ui->txtHeader->text()) && !line.startsWith(ui->txtFooter->text()))
                       outputFile.write((line+EOL).toLocal8Bit().data());

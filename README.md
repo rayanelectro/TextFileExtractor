@@ -8,6 +8,6 @@ It continues reading the source file, untill it reaches the Footer text.
 If another header is found, a new file will be creaded.
 
 # Binary Releases
-[Download "TextFileExtractor v1.0" Windows Binary here.](https://github.com/rayanelectro/TextFileExtractor/releases/download/1.0/TextFileExtractor-v1.0-BIN.rar)
+[Download "TextFileExtractor v1.0.1" Windows Binary here.](https://github.com/rayanelectro/TextFileExtractor/releases/download/1.0.1/TextFileExtractor-v1.0.1-BIN.zip_)
 
 # Compiled with QT 5.2

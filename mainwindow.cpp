@@ -26,6 +26,8 @@ void MainWindow::on_btnBrowse_clicked()
 {
     QString fileName;
     fileName = QFileDialog::getOpenFileName(this,"Open Image", "", "All Files (*.*)");
+    fileName = QDir::toNativeSeparators(fileName);
+
     if(fileName!="")
         ui->txtFileName->setText(fileName);
 }
@@ -38,6 +40,8 @@ void MainWindow::on_btnSplit_clicked()
     int SplitFileNumber=0;
     bool changed=false;
     bool HeaderFound=false;
+    QString NewFileName,OldFileName;
+    QString FilePath;
 
     CancelLoop=false;
 
@@ -55,7 +59,12 @@ void MainWindow::on_btnSplit_clicked()
        else
            EOL="\r\n";
 
+       FilePath=ui->txtFileName->text().section("\\",0,-2);
+
+
        ui->progressBar->setVisible(true);
+       ui->groupBoxFileName->setEnabled(false);
+
        while (!in.atEnd() && CancelLoop==false) //Loop untill we reach the end of file, or the user cancels the operation.
        {
           QString line = in.readLine(); //Read one line at a time
@@ -70,11 +79,23 @@ void MainWindow::on_btnSplit_clicked()
 
               if(outputFile.isOpen())outputFile.close(); //If by any chance the file hase laready been open, close it.
 
-              QString SplitFileName =ui->txtFileName->text()+ QString("_split%1.txt").arg(SplitFileNumber,5, 10, QChar('0')); //Make a new numbered file.
-              outputFile.setFileName(SplitFileName);
+              OldFileName =ui->txtFileName->text()+ QString("_split%1.txt").arg(SplitFileNumber,5, 10, QChar('0')); //Make a new numbered file.
+              outputFile.setFileName(OldFileName);
               outputFile.open(QIODevice::WriteOnly| QIODevice::Text); //Open the file for writing.
 
+
           }
+
+
+          if(ui->radFileNameFromFile->isChecked())
+          {
+              if(line.contains(ui->txtFileNameTextTemplate->text()))
+              {
+                  QString lineText=line;
+                  NewFileName=lineText.replace(ui->txtFileNameTextTemplate->text(),"").trimmed()+".txt";
+              }
+          }
+
 
           if(HeaderFound==true)
           {
@@ -90,7 +111,13 @@ void MainWindow::on_btnSplit_clicked()
 
           if(line.startsWith(ui->txtFooter->text()))
           {
-              if(outputFile.isOpen())outputFile.close();
+              if(outputFile.isOpen())
+              {
+                  outputFile.close();
+                  if(NewFileName!="")
+                    QFile::rename(OldFileName,FilePath+"\\"+NewFileName);
+                  NewFileName="";
+              }
               changed=true;
               HeaderFound=false;
               FooterCnt++;
@@ -105,6 +132,8 @@ void MainWindow::on_btnSplit_clicked()
        }
        inputFile.close();
        ui->progressBar->setVisible(false);
+       ui->groupBoxFileName->setEnabled(true);
+
        QMessageBox msgBox;
        msgBox.setText("File extraction finished!");
        msgBox.setIcon(QMessageBox::Information);
@@ -137,7 +166,7 @@ void MainWindow::on_btnStop_clicked()
 void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox msgBox;
-    msgBox.setText("Text File Extractor v1.0\r\nMorteza Zafari\r\nzafari@gmail.com");
+    msgBox.setText("Text File Extractor v1.2\r\nMorteza Zafari\r\nzafari@gmail.com");
     msgBox.setIcon(QMessageBox::Information);
     msgBox.setMinimumWidth(500);
     msgBox.exec();
